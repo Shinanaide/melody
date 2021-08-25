@@ -1,2 +1,2 @@
 # melody
-Discord Bot for taking song requests to play from YouTube
+Discord Bot for playing YouTube song requests in a playlist
