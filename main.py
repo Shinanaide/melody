@@ -1,39 +1,41 @@
 # bot.py
 import os
 
-import discord
+# imports
 from dotenv import load_dotenv
+from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 ch_general = int(os.getenv('GENERAL-CHAT'))
 ch_musiccmds = int(os.getenv('MUSIC-CMDS'))
 
-client = discord.Client()
+bot = commands.Bot(command_prefix='!')
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    print(f'{bot.user} has connected to Discord!')
 
 
-@client.event
+@bot.event
 async def on_member_join(member):
-    channel = client.get_channel(ch_general)
+    channel = bot.get_channel(ch_general)
     await channel.send(
         f'A new GAMER has arrived! Welcome {member.name} /G A M E ! :dogege:'
     )
 
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    'TODO: RegEx'
-    if message.content == '!sr' and message.channel.id == ch_musiccmds:
-        response = 'todo'
-        await message.channel.send(response)
+@bot.command()
+async def sr(ctx, req):
+    pass
+    # TODO regex & YouTube API
 
 
-client.run(TOKEN)
+@bot.command()
+async def playlist(ctx):
+    pass
+    # TODO format playlist
+
+
+bot.run(TOKEN)
