@@ -38,4 +38,58 @@ async def playlist(ctx):
     # TODO format playlist
 
 
+@bot.command()
+async def remove(ctx, idx):
+    pass
+    # TODO remove song with idx from playlist
+
+
+@bot.command()
+async def move(ctx, idx1, idx2):
+    pass
+    # TODO move song with idx1 to position idx2
+
+
+@bot.command()
+async def pause(ctx):
+    pass
+    # TODO pause music
+
+
+@bot.command()
+async def resume(ctx):
+    pass
+    # TODO resume music
+
+
+@bot.command()
+async def stop(ctx):
+    pass
+    # TODO bot quits voice channel and clears playlist
+
+
+@bot.command()
+async def clear(ctx):
+    pass
+    # TODO clear playlist & stop current song
+
+
+@bot.command()
+async def skip(ctx):
+    pass
+    # TODO skip current song
+
+
+@bot.command()
+async def jump(ctx, idx):
+    pass
+    # TODO jump to specified idx in playlist
+
+
+@bot.command()
+async def shuffle(ctx):
+    pass
+    # TODO shuffle playlist
+
+
 bot.run(TOKEN)
