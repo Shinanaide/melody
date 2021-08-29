@@ -1,9 +1,9 @@
 # bot.py
 import os
-
-# imports
+import discord
 from dotenv import load_dotenv
 from discord.ext import commands
+import youtube_dl
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -27,15 +27,42 @@ async def on_member_join(member):
 
 
 @bot.command()
-async def sr(ctx, req):
-    pass
-    # TODO regex & YouTube API
+async def sr(ctx, req: str):
+    vc = ctx.author.voice.channel  # voice channel of author
+    try:
+        await vc.connect()
+    except:
+        pass
+
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+
+    song_exists = os.path.isfile("song.webm")
+
+    if song_exists:
+        try:
+            os.remove("song.webm")
+        except PermissionError:
+            await ctx.send("Wait for the current playing music to end or use the 'stop' command")
+            return
+
+    # download and conversion options for youtube-dl (should be the best configuration)
+    ydl_opts = {
+        'format': '249/250/251'
+    }
+
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([req])
+    for file in os.listdir("./"):
+        if file.endswith(".webm"):
+            os.rename(file, "song.webm")
+    voice.play(discord.FFmpegPCMAudio("song.webm"))
+    # TODO playlist functionality
 
 
 @bot.command()
 async def playlist(ctx):
     pass
-    # TODO format playlist
+    # TODO format playlist into discord chat
 
 
 @bot.command()
@@ -52,20 +79,32 @@ async def move(ctx, idx1, idx2):
 
 @bot.command()
 async def pause(ctx):
-    pass
-    # TODO pause music
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if voice.is_playing():
+        voice.pause()
 
 
 @bot.command()
 async def resume(ctx):
-    pass
-    # TODO resume music
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    if voice.is_paused():
+        voice.resume()
+
+
+@bot.command()
+async def leave(ctx):
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    try:
+        if voice.is_connceted():
+            await voice.disconnect()
+    except:
+        pass
 
 
 @bot.command()
 async def stop(ctx):
-    pass
-    # TODO bot quits voice channel and clears playlist
+    voice = discord.utils.get(bot.voice_clients, guild=ctx.guild)
+    voice.stop()
 
 
 @bot.command()
